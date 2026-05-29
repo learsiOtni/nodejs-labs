@@ -23,6 +23,12 @@ let users = [
     },
 ];
 
+// Function to convert a date string in the format "dd-mm-yyyy" to a Date object
+function getDateFromString(strDate) {
+    let [dd, mm, yyyy] = strDate.split('-');
+    return new Date(yyyy + "/" + mm + "/" + dd);
+}
+
 // GET request: Retrieve all users
 router.get("/",(req,res)=>{
   // Copy the code here
@@ -35,6 +41,23 @@ router.get("/:email",(req,res)=>{
   const user = users.filter( user => user.email === req.params.email);
   res.send(user)//This line is to be replaced with actual return value
 });
+
+router.get("/lastName/:lastName", (req, res) => {
+    const user = users.filter( user => user.lastName === req.params.lastName);
+    res.send(user);
+})
+
+router.get("/dob", (req, res) => {
+    
+    //res.send(users.sort( (a, b) => new Date(b.DOB) - new Date(a.DOB)))
+    let sorted_users = users.sort(function(a,b){
+        let d1 = getDateFromString(a.DOB);
+        let d2 = getDateFromString(b.DOB);
+        return d1 - d2;
+    })
+
+    res.send("sorting dob");
+})
 
 
 // POST request: Create a new user
